@@ -5,23 +5,29 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
-import ro.demo.ReservationPlatformApp.model.WorkingDays;
 
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("locationManagement")
-public interface LocationApi {
+@RequestMapping("myAccount")
+public interface UserManagementApi {
 
     @GetMapping("")
+    String accountManagement(Model model);
+
+    @GetMapping("/locationManagement")
     String locationManagement(Model model);
 
-    @GetMapping("/addLocation")
+    @GetMapping("/locationManagement/addLocation")
     String addLocationForm(Model model);
 
-    @PostMapping("/addLocation")
+    @GetMapping("/locationManagement/locationView/{locationId}")
+    String locationView(Model model,
+                        @PathVariable UUID locationId);
+
+    @PostMapping("/locationManagement/addLocation")
     RedirectView addLocation(Model model,
                              @RequestParam String locationName,
                              @RequestParam String phoneNumber,
@@ -30,13 +36,13 @@ public interface LocationApi {
                              @RequestParam LocalTime closingHour,
                              @RequestParam MultipartFile locationProfilePicture);
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/locationManagement/delete/{id}")
     RedirectView deleteLocation(Model model, @PathVariable UUID id);
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/locationManagement/edit/{id}")
     String editLocationForm(Model model, @PathVariable UUID id);
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/locationManagement/edit/{id}")
     RedirectView editLocation(Model model,
                               @PathVariable UUID id,
                               @RequestParam String updatedLocationName,
@@ -46,17 +52,40 @@ public interface LocationApi {
                               @RequestParam LocalTime updatedClosingHour,
                               @RequestParam MultipartFile updatedProfilePicture);
 
-    @GetMapping("/image/{id}")
+    @GetMapping("/locationManagement/image/{id}")
     void getLocationImage(@PathVariable UUID id,
                           HttpServletResponse response) throws IOException;
 
-    @GetMapping("/addService/{id}")
-    String addServiceForm(Model model,
-                          @PathVariable UUID id);
+    @GetMapping("/locationManagement/locationView/image/{id}")
+    void getImageForLocationView(@PathVariable UUID id,
+                          HttpServletResponse response) throws IOException;
 
-    @PostMapping("/addService/{id}")
+    @GetMapping("/locationManagement/addService/{locationId}")
+    String addServiceForm(Model model,
+                          @PathVariable UUID locationId);
+
+    @PostMapping("/locationManagement/addService/{locationId}")
     RedirectView addService(Model model,
-                            @PathVariable UUID id,
+                            @PathVariable UUID locationId,
                             @RequestParam String serviceName,
                             @RequestParam Double servicePrice);
+
+    @GetMapping("/locationManagement/addStylist/{locationId}")
+    String addStylistForm(Model model,
+                          @PathVariable UUID locationId);
+
+    @PostMapping("/locationManagement/addStylist/{locationId}")
+    RedirectView addStylist(Model model,
+                            @PathVariable UUID locationId,
+                            @RequestParam String stylistName);
+
+    @GetMapping("/myReservations")
+    String displayUserReservations(Model model);
+
+    @GetMapping("/locationReservations/{locationId}")
+    String currentReservationsForLocation(Model model,
+                                          @PathVariable UUID locationId);
+
+    @GetMapping("/myReservations/delete/{id}")
+    RedirectView deleteReservation(Model model, @PathVariable UUID id);
 }

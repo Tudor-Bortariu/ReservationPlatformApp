@@ -38,7 +38,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authz) -> {
                     try {
                         authz
-                                .requestMatchers("/locationManagement", "/locationManagement/*").hasAuthority("BUSINESS_OWNER")
+                                .requestMatchers("/myAccount", "/myAccount/*").hasAuthority("BUSINESS_OWNER")
+                                .requestMatchers("/reservation/*").authenticated()
                                 .anyRequest().permitAll()
                                 .and()
                                 .formLogin()

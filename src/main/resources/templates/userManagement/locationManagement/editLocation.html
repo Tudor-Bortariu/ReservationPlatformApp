@@ -19,7 +19,7 @@
     <nav>
         <a th:href="@{/}">Home</a>
         <a th:href="@{/locationManagement}">Locations</a>
-        <a th:href="@{/reservationManagement}">Reservations</a>
+        <a th:href="@{/reservations}">Reservations</a>
         <a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a>
         <a th:href="@{/logoutConfirm}" sec:authorize="isAuthenticated()">Logout</a>
         <a th:href="@{/register}" sec:authorize="!isAuthenticated()">Register</a>
@@ -43,20 +43,20 @@
                 <div class="col">
                     <select class="form-select" multiple aria-label="multiple select example" name="updatedWorkingDays">
                         <option disabled>WORKING DAYS</option>
-                        <option selected value="Monday" name="monday" th:if="${location.workingDays.contains('Monday')}">Monday</option>
-                        <option value="Monday" name="monday" th:unless="${location.workingDays.contains('Monday')}">Monday</option>
-                        <option selected value="Tuesday" name="tuesday" th:if="${location.workingDays.contains('Tuesday')}">Tuesday</option>
-                        <option value="Tuesday" name="tuesday" th:unless="${location.workingDays.contains('Tuesday')}">Tuesday</option>
-                        <option selected value="Wednesday" name="wednesday" th:if="${location.workingDays.contains('Wednesday')}">Wednesday</option>
-                        <option value="Wednesday" name="wednesday" th:unless="${location.workingDays.contains('Wednesday')}">Wednesday</option>
-                        <option selected value="Thursday" name="thursday" th:if="${location.workingDays.contains('Thursday')}">Thursday</option>
-                        <option value="Thursday" name="thursday" th:unless="${location.workingDays.contains('Thursday')}">Thursday</option>
-                        <option selected value="Friday" name="friday" th:if="${location.workingDays.contains('Friday')}">Friday</option>
-                        <option value="Friday" name="friday" th:unless="${location.workingDays.contains('Friday')}">Friday</option>
-                        <option selected value="Saturday" name="saturday" th:if="${location.workingDays.contains('Saturday')}">Saturday</option>
-                        <option value="Saturday" name="saturday" th:unless="${location.workingDays.contains('Saturday')}">Saturday</option>
-                        <option selected value="Sunday" name="sunday" th:if="${location.workingDays.contains('Sunday')}">Sunday</option>
-                        <option value="Sunday" name="sunday" th:unless="${location.workingDays.contains('Sunday')}">Sunday</option>
+                        <option selected value="MONDAY" name="monday" th:if="${location.workingDays.contains('Monday')}">Monday</option>
+                        <option value="MONDAY" name="monday" th:unless="${location.workingDays.contains('Monday')}">Monday</option>
+                        <option selected value="TUESDAY" name="tuesday" th:if="${location.workingDays.contains('Tuesday')}">Tuesday</option>
+                        <option value="TUESDAY" name="tuesday" th:unless="${location.workingDays.contains('Tuesday')}">Tuesday</option>
+                        <option selected value="WEDNESDAY" name="wednesday" th:if="${location.workingDays.contains('Wednesday')}">Wednesday</option>
+                        <option value="WEDNESDAY" name="wednesday" th:unless="${location.workingDays.contains('Wednesday')}">Wednesday</option>
+                        <option selected value="THURSDAY" name="thursday" th:if="${location.workingDays.contains('Thursday')}">Thursday</option>
+                        <option value="THURSDAY" name="thursday" th:unless="${location.workingDays.contains('Thursday')}">Thursday</option>
+                        <option selected value="FRIDAY" name="friday" th:if="${location.workingDays.contains('Friday')}">Friday</option>
+                        <option value="FRIDAY" name="friday" th:unless="${location.workingDays.contains('Friday')}">Friday</option>
+                        <option selected value="SATURDAY" name="saturday" th:if="${location.workingDays.contains('Saturday')}">Saturday</option>
+                        <option value="SATURDAY" name="saturday" th:unless="${location.workingDays.contains('Saturday')}">Saturday</option>
+                        <option selected value="SUNDAY" name="sunday" th:if="${location.workingDays.contains('Sunday')}">Sunday</option>
+                        <option value="SUNDAY" name="sunday" th:unless="${location.workingDays.contains('Sunday')}">Sunday</option>
                     </select>
                 </div>
             </div>

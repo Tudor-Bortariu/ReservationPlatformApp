@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ro.demo.ReservationPlatformApp.api.ReservationApi;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -38,7 +39,15 @@ public class Location {
 
     @OneToMany(mappedBy = "location", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private List<Service> services;
+    private List<Service> serviceList;
+
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private List<Stylist> stylistList;
+
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private List<Reservation> reservationList;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)

@@ -18,10 +18,13 @@ public interface JpaLocationRepository extends JpaRepository<Location, UUID> {
     List<Location> findAllLocationsByUser (User user);
 
     @Query(value = "SELECT l FROM #{#entityName} l WHERE l.user = :user AND l.id = :id")
-    Optional<Location> findLocationById (User user, UUID id);
+    Optional<Location> findLocationByIdAndUser(User user, UUID id);
 
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM #{#entityName} l WHERE l.id = :id AND l.user = :user")
     void deleteByLocationId(User user, @Param("id") UUID id);
+
+    @Query(value = "SELECT l FROM #{#entityName} l WHERE l.id = :id")
+    Optional<Location> findLocationById(UUID id);
 }

@@ -19,7 +19,7 @@
     <nav>
         <a th:href="@{/}">Home</a>
         <a th:href="@{/locationManagement}">Locations</a>
-        <a th:href="@{/reservationManagement}">Reservations</a>
+        <a th:href="@{/reservations}">Reservations</a>
         <a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a>
         <a th:href="@{/logoutConfirm}" sec:authorize="isAuthenticated()">Logout</a>
         <a th:href="@{/register}" sec:authorize="!isAuthenticated()">Register</a>
@@ -29,7 +29,7 @@
     <h1 align="center">Add Service</h1>
 
     <div class="container">
-        <form method="post" th:action="@{/locationManagement/addService/{id}(id=${location.id})}">
+        <form method="post" th:action="@{/locationManagement/addService/{locationId}(locationId=${location.id})}">
 
             <div class="row" id="edit-Location-Form-Row-one">
                 <div class="col">
@@ -40,7 +40,7 @@
                 </div>
                 <br>
                 <div class="col">
-                    <input type="submit" value="Add Location" class="btn btn-primary" style="background-color: #04AA6D;">
+                    <input type="submit" value="Add Service" class="btn btn-primary" style="background-color: #04AA6D;">
                 </div>
             </div>
         </form>

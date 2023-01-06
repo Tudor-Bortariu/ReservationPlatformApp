@@ -19,57 +19,59 @@
     <nav>
         <a th:href="@{/}">Home</a>
         <a th:href="@{/locationManagement}">Locations</a>
-        <a th:href="@{/reservationManagement}">Reservations</a>
+        <a th:href="@{/reservations}">Reservations</a>
         <a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a>
         <a th:href="@{/logoutConfirm}" sec:authorize="isAuthenticated()">Logout</a>
         <a th:href="@{/register}" sec:authorize="!isAuthenticated()">Register</a>
         <div class="animation"></div>
     </nav>
 
-    <h1 align="center">Add New Location</h1>
+    <h1 align="center">Make New Reservation</h1>
 
     <div class="container">
-        <form method="post" th:action="@{addLocation}" enctype="multipart/form-data">
+        <form method="post" th:action="@{/reservations/makeReservation/{locationId}(locationId=${location.id})}">
 
             <div class="row" id="edit-Location-Form-Row-one">
                 <div class="col">
                     <label for="locationName">Location Name: </label>
-                    <input type="text" class="form-control" name="locationName" id="locationName" required placeholder="Location Name">
+                    <input type="text" class="form-control" name="locationName" id="locationName" readonly th:value="${location.name}">
+                </div>
+                <div class="col">
+                    <label for="firstName">First Name: </label>
+                    <input type="text" class="form-control" name="firstName" id="firstName" required minlength="2" placeholder="First Name">
+                </div>
+                <div class="col">
+                    <label for="lastName">Last Name: </label>
+                    <input type="text" class="form-control" name="lastName" id="lastName" required minlength="2" placeholder="Last Name">
                 </div>
                 <div class="col">
                     <label for="phoneNumber">Phone Number: </label>
                     <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" required maxlength="10" minlength="10" placeholder="Phone Number">
                 </div>
-                <div class="col">
-                    <select class="form-select" multiple aria-label="multiple select example" required name="workingDays">
-                        <option disabled>WORKING DAYS</option>
-                        <option value="Monday" name="monday">Monday</option>
-                        <option value="Tuesday" name="tuesday">Tuesday</option>
-                        <option value="Wednesday" name="wednesday">Wednesday</option>
-                        <option value="Thursday" name="thursday">Thursday</option>
-                        <option value="Friday" name="friday">Friday</option>
-                        <option value="Saturday" name="saturday">Saturday</option>
-                        <option value="Sunday" name="sunday">Sunday</option>
-                    </select>
-                </div>
             </div>
 
             <div class="row" id="edit-Location-Form-Row-two">
                 <div class="col">
-                    <label for="openingHour">Opening Hour</label>
-                    <input class="form-control" type="time" name="openingHour" required id="openingHour"/>
+                    <label for="reservationDate">Choose Date: </label>
+                    <input type="date" class="form-control" name="reservationDate" id="reservationDate" required th:min="${minDate}" th:max="${maxDate}">
                 </div>
                 <div class="col">
-                    <label for="closingHour">Closing Hour</label>
-                    <input class="form-control" type="time" name="closingHour" required id="closingHour"/>
+                    <label for="reservationTime">Choose Hour: </label>
+                    <input class="form-control" type="time" name="reservationTime" required id="reservationTime"/>
                 </div>
                 <div class="col">
-                    <label for="locationProfilePicture">Upload Profile Picture</label>
-                    <input id="locationProfilePicture" class="form-control" type="file" required name="locationProfilePicture" accept="image/png, image/gif, image/jpeg">
+                    <select class="form-select" aria-label="Default select example" name="service" id="service" required>
+                        <option th:each="service : ${serviceList}" th:value="${service.name} + ' - ' + ${service.price}" th:text="${service.name} + ' - ' + ${service.price}"></option>
+                    </select>
+                </div>
+                <div class="col">
+                    <select class="form-select" aria-label="Default select example" name="stylist" id="stylist" required>
+                        <option th:each="stylist : ${stylistList}" th:value="${stylist.name}" th:text="${stylist.name}"></option>
+                    </select>
                 </div>
             </div>
             <br>
-            <input type="submit" value="Add Location" class="btn btn-primary" style="background-color: #04AA6D;">
+            <input type="submit" value="Make Reservation" class="btn btn-primary" style="background-color: #04AA6D;">
         </form>
     </div>
 
