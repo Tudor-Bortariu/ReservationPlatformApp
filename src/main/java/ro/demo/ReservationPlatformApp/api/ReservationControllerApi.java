@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @RequestMapping("reservations")
-public interface ReservationApi {
+public interface ReservationControllerApi {
 
     @GetMapping("")
     String availableLocationsList(Model model);

@@ -3,19 +3,18 @@ package ro.demo.ReservationPlatformApp.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
-import ro.demo.ReservationPlatformApp.api.ReservationApi;
+import ro.demo.ReservationPlatformApp.api.ReservationControllerApi;
 import ro.demo.ReservationPlatformApp.model.*;
 import ro.demo.ReservationPlatformApp.repository.JpaLocationRepository;
 import ro.demo.ReservationPlatformApp.repository.JpaReservationRepository;
-import ro.demo.ReservationPlatformApp.repository.JpaServiceRepository;
 import ro.demo.ReservationPlatformApp.repository.JpaStylistRepository;
-import ro.demo.ReservationPlatformApp.service.IAuthenticationFacade;
+import ro.demo.ReservationPlatformApp.service.ReservationServiceImpl;
+import ro.demo.ReservationPlatformApp.service.SecurityServiceImpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,7 +26,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Controller
-public class ReservationController implements ReservationApi {
+public class ReservationController implements ReservationControllerApi {
 
     @Autowired
     JpaLocationRepository locationRepository;
@@ -36,10 +35,10 @@ public class ReservationController implements ReservationApi {
     JpaStylistRepository stylistRepository;
 
     @Autowired
-    JpaServiceRepository serviceRepository;
+    ReservationServiceImpl reservationService;
 
     @Autowired
-    IAuthenticationFacade authenticationFacade;
+    SecurityServiceImpl securityService;
 
     @Autowired
     JpaReservationRepository reservationRepository;
@@ -55,9 +54,6 @@ public class ReservationController implements ReservationApi {
     @Override
     public String reservationForm(Model model,
                                   @PathVariable UUID locationId){
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
         Location location = locationRepository.findLocationById(locationId).get();
 
         model.addAttribute("location", location);
@@ -79,31 +75,15 @@ public class ReservationController implements ReservationApi {
                                         @RequestParam LocalTime reservationTime,
                                         @RequestParam String service,
                                         @RequestParam String stylist){
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
+        User user = securityService.getUser();
 
         Location location = locationRepository.findLocationById(locationId).get();
         Stylist chosenStylist = stylistRepository.findStylistByLocationIdAndName(locationId, stylist).get();
         String reservationDayOfWeek = reservationDate.getDayOfWeek().name();
-
         List<Reservation> reservationList = reservationRepository.findAllReservationsByLocationId(locationId, LocalDate.now());
 
-        if(location.getWorkingDays().contains(reservationDayOfWeek) && reservationTime.isAfter(location.getOpeningHour())
-        && reservationTime.isBefore(location.getClosingHour())){
-            Reservation reservation = new Reservation(UUID.randomUUID(), firstName, lastName, phoneNumber, reservationDate, reservationTime,
-                    location, service, chosenStylist);
-
-            if(reservationList.contains(reservation)){
-                throw new IllegalArgumentException("A reservation already exists for that time and date at the selected stylist.");
-            }
-
-            reservation.setUser(user);
-            reservation.setDayOfWeek(reservationDate.getDayOfWeek().name());
-
-            reservationRepository.saveAndFlush(reservation);
-        }else{
-            throw new IllegalArgumentException("Reservation Date or Time is out of the location weekly schedule.");
-        }
+        reservationService.makeReservation(location, reservationDayOfWeek, reservationTime, firstName, lastName, phoneNumber,
+                reservationDate, service, chosenStylist, reservationList, user);
 
         return new RedirectView("/reservations");
     }
@@ -111,9 +91,6 @@ public class ReservationController implements ReservationApi {
     @Override
     public String locationView(Model model,
                                @PathVariable UUID locationId){
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
         model.addAttribute("location", locationRepository.findLocationById(locationId).get());
 
         return "reservationManagement/locationView";

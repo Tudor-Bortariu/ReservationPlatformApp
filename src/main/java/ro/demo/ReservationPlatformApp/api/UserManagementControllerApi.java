@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RequestMapping("myAccount")
-public interface UserManagementApi {
+public interface UserManagementControllerApi {
 
     @GetMapping("")
     String accountManagement(Model model);

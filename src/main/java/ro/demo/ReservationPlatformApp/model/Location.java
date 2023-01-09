@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ro.demo.ReservationPlatformApp.api.ReservationApi;
 
 import java.time.LocalTime;
 import java.util.List;

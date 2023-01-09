@@ -3,21 +3,19 @@ package ro.demo.ReservationPlatformApp.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
-import ro.demo.ReservationPlatformApp.api.UserManagementApi;
+import ro.demo.ReservationPlatformApp.api.UserManagementControllerApi;
 import ro.demo.ReservationPlatformApp.model.*;
 import ro.demo.ReservationPlatformApp.repository.JpaLocationRepository;
 import ro.demo.ReservationPlatformApp.repository.JpaReservationRepository;
 import ro.demo.ReservationPlatformApp.repository.JpaServiceRepository;
 import ro.demo.ReservationPlatformApp.repository.JpaStylistRepository;
-import ro.demo.ReservationPlatformApp.service.IAuthenticationFacade;
+import ro.demo.ReservationPlatformApp.service.SecurityServiceImpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -29,7 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Controller
-public class UserManagementController implements UserManagementApi {
+public class UserManagementController implements UserManagementControllerApi {
 
     @Autowired
     JpaLocationRepository locationRepository;
@@ -41,7 +39,7 @@ public class UserManagementController implements UserManagementApi {
     JpaServiceRepository serviceRepository;
 
     @Autowired
-    IAuthenticationFacade authenticationFacade;
+    SecurityServiceImpl securityService;
 
     @Autowired
     JpaReservationRepository reservationRepository;
@@ -54,10 +52,7 @@ public class UserManagementController implements UserManagementApi {
 
     @Override
     public String locationManagement(Model model){
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
-        model.addAttribute("locationList", locationRepository.findAllLocationsByUser(user));
+        model.addAttribute("locationList", locationRepository.findAllLocationsByUser(securityService.getUser()));
 
         return "userManagement/locationManagement/generalView";
     }
@@ -70,10 +65,7 @@ public class UserManagementController implements UserManagementApi {
     @Override
     public String locationView(Model model,
                         @PathVariable UUID locationId){
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
-        model.addAttribute("location", locationRepository.findLocationByIdAndUser(user, locationId).get());
+        model.addAttribute("location", locationRepository.findLocationByIdAndUser(securityService.getUser(), locationId).get());
 
         return "userManagement/locationManagement/locationView";
     }
@@ -87,11 +79,8 @@ public class UserManagementController implements UserManagementApi {
                                     @RequestParam LocalTime closingHour,
                                     @RequestParam MultipartFile locationProfilePicture) {
 
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
         Location addedLocation = new Location(UUID.randomUUID(), locationName, phoneNumber, workingDays, openingHour, closingHour);
-        addedLocation.setUser(user);
+        addedLocation.setUser(securityService.getUser());
 
         if (locationProfilePicture != null){
             try {
@@ -108,20 +97,14 @@ public class UserManagementController implements UserManagementApi {
 
     @Override
     public RedirectView deleteLocation(Model model, @PathVariable UUID id) {
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
-        locationRepository.deleteByLocationId(user, id);
+        locationRepository.deleteByLocationId(securityService.getUser(), id);
 
         return new RedirectView("/locationManagement");
     }
 
     @Override
     public String editLocationForm(Model model, UUID id) {
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
-        model.addAttribute("location", locationRepository.findLocationByIdAndUser(user, id).get());
+        model.addAttribute("location", locationRepository.findLocationByIdAndUser(securityService.getUser(), id).get());
 
         return "userManagement/locationManagement/editLocation";
     }
@@ -136,10 +119,7 @@ public class UserManagementController implements UserManagementApi {
                                      @RequestParam LocalTime updatedClosingHour,
                                      @RequestParam MultipartFile updatedProfilePicture) {
 
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
-        Location location = locationRepository.findLocationByIdAndUser(user, id).get();
+        Location location = locationRepository.findLocationByIdAndUser(securityService.getUser(), id).get();
 
         location.setName(updatedLocationName);
         location.setPhoneNumber(updatedPhoneNumber);
@@ -163,12 +143,9 @@ public class UserManagementController implements UserManagementApi {
     @Override
     public void getLocationImage(@PathVariable UUID id,
                           HttpServletResponse response) throws IOException{
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
         response.setContentType("image/jpg, image/png");
 
-        Optional<Location> location = locationRepository.findLocationByIdAndUser(user, id);
+        Optional<Location> location = locationRepository.findLocationByIdAndUser(securityService.getUser(), id);
 
         InputStream imageStream = new ByteArrayInputStream(location.get().getLocationProfilePicture());
         IOUtils.copy(imageStream, response.getOutputStream());
@@ -177,12 +154,9 @@ public class UserManagementController implements UserManagementApi {
     @Override
     public void getImageForLocationView(@PathVariable UUID id,
                                  HttpServletResponse response) throws IOException{
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
         response.setContentType("image/jpg, image/png");
 
-        Optional<Location> location = locationRepository.findLocationByIdAndUser(user, id);
+        Optional<Location> location = locationRepository.findLocationByIdAndUser(securityService.getUser(), id);
 
         InputStream imageStream = new ByteArrayInputStream(location.get().getLocationProfilePicture());
         IOUtils.copy(imageStream, response.getOutputStream());
@@ -191,10 +165,7 @@ public class UserManagementController implements UserManagementApi {
     @Override
     public String addServiceForm(Model model,
                                  @PathVariable UUID locationId){
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
-        model.addAttribute("location", locationRepository.findLocationByIdAndUser(user, locationId).get());
+        model.addAttribute("location", locationRepository.findLocationByIdAndUser(securityService.getUser(), locationId).get());
 
         return "userManagement/locationManagement/addService";
     }
@@ -205,10 +176,7 @@ public class UserManagementController implements UserManagementApi {
                             @RequestParam String serviceName,
                             @RequestParam Double servicePrice){
 
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
-        Location location = locationRepository.findLocationByIdAndUser(user, locationId).get();
+        Location location = locationRepository.findLocationByIdAndUser(securityService.getUser(), locationId).get();
         Service service = new Service(UUID.randomUUID(), serviceName, servicePrice, location);
 
         serviceRepository.saveAndFlush(service);
@@ -219,10 +187,7 @@ public class UserManagementController implements UserManagementApi {
     @Override
     public String addStylistForm(Model model,
                           @PathVariable UUID locationId){
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
-        model.addAttribute("location", locationRepository.findLocationByIdAndUser(user, locationId).get());
+        model.addAttribute("location", locationRepository.findLocationByIdAndUser(securityService.getUser(), locationId).get());
 
         return "userManagement/locationManagement/addStylist";
     }
@@ -231,10 +196,8 @@ public class UserManagementController implements UserManagementApi {
     public RedirectView addStylist(Model model,
                             @PathVariable UUID locationId,
                             @RequestParam String stylistName){
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
 
-        Location location = locationRepository.findLocationByIdAndUser(user, locationId).get();
+        Location location = locationRepository.findLocationByIdAndUser(securityService.getUser(), locationId).get();
         Stylist stylist = new Stylist(UUID.randomUUID(), stylistName, location);
 
         stylistRepository.saveAndFlush(stylist);
@@ -244,10 +207,7 @@ public class UserManagementController implements UserManagementApi {
 
     @Override
     public String displayUserReservations(Model model){
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
-        model.addAttribute("reservationList", reservationRepository.findAllReservationsByUser(user, LocalDate.now()));
+        model.addAttribute("reservationList", reservationRepository.findAllReservationsByUser(securityService.getUser(), LocalDate.now()));
 
         return "userManagement/reservationManagement/myReservations";
     }
@@ -265,10 +225,7 @@ public class UserManagementController implements UserManagementApi {
 
     @Override
     public RedirectView deleteReservation(Model model, @PathVariable UUID id){
-        Authentication authentication = authenticationFacade.getAuthentication();
-        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
-
-        reservationRepository.deleteReservationByUserAndId(user, id);
+        reservationRepository.deleteReservationByUserAndId(securityService.getUser(), id);
 
         return new RedirectView("/myAccount/myReservations");
     }

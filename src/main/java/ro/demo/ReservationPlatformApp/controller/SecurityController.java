@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
-import ro.demo.ReservationPlatformApp.api.SecurityApi;
+import ro.demo.ReservationPlatformApp.api.SecurityControllerApi;
 import ro.demo.ReservationPlatformApp.configuration.SecurityConfig;
 import ro.demo.ReservationPlatformApp.model.Role;
 import ro.demo.ReservationPlatformApp.model.User;
@@ -13,7 +13,7 @@ import ro.demo.ReservationPlatformApp.repository.JpaUserRepository;
 import java.util.UUID;
 
 @Controller
-public class SecurityController implements SecurityApi {
+public class SecurityController implements SecurityControllerApi {
 
     @Autowired
     private SecurityConfig securityConfig = new SecurityConfig();

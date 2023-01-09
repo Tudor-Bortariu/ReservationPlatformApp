@@ -5,13 +5,13 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import ro.demo.ReservationPlatformApp.api.HomeApi;
+import ro.demo.ReservationPlatformApp.api.HomeControllerApi;
 import ro.demo.ReservationPlatformApp.model.CustomUserDetails;
 import ro.demo.ReservationPlatformApp.model.User;
 import ro.demo.ReservationPlatformApp.service.IAuthenticationFacade;
 
 @Controller
-public class HomeController implements HomeApi {
+public class HomeController implements HomeControllerApi {
 
     @Autowired
     IAuthenticationFacade authenticationFacade;
