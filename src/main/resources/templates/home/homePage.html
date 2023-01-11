@@ -9,35 +9,33 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css”/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/CssStyle/cssStyle.css}">
 </head>
 <body>
 
-    <div class="pos-f-t">
-        <div class="bg-dark p-2">
-            <div class="bg-dark p-2">
-
-                <div class="topnavDark">
-                    <a th:href="@{/}">Home</a>
-                    <a th:href="@{/myAccount}" sec:authorize="isAuthenticated()">My Account</a>
-                    <a th:href="@{/reservations}">Locations</a>
-                    <a th:href="@{/logoutConfirm}" sec:authorize="isAuthenticated()">Logout</a>
-                    <a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a>
-                    <a th:href="@{/register}" sec:authorize="!isAuthenticated()">Register</a>
+    <div class="pos-f-t" style="background: #873e23">
+                <div class="topnav">
+                    <a th:href="@{/login}"><i class="bi bi-file-person"></i></a>
+                    <a th:href="@{/logoutConfirm}" sec:authorize="isAuthenticated()" ><i class="bi bi-power"> Logout</i></a>
                 </div>
-
-            </div>
-        </div>
     </div>
 
     <h1 align="center" class="display-5">Reservation Application</h1>
 
-    <div class="container">
-        <p id="greetingMessage" sec:authorize="isAuthenticated()" th:text="'Welcome, ' + ${userFirstName} + '!'"></p>
+    <div class="menu">
+        <a class="btn btn-outline-primary" th:href="@{/}" style="background: #e28743"><i class="bi bi-house"></i> Home</a>
+        <a class="btn btn-outline-primary" th:href="@{/reservations}" style="background: #873e23"><i class="bi bi-building"></i> Available Locations</a>
+        <a class="btn btn-outline-primary" th:href="@{/myAccount}" sec:authorize="isAuthenticated()" style="background: #f9b256"><i class="bi bi-person"></i> My Account</a>
+        <a class="btn btn-outline-primary" th:href="@{/register}" style="background: #4f1901"><i class="bi bi-card-heading"></i> Register</a>
     </div>
 
+    <br>
+
     <div class="container">
-        <img th:src="@{Images/reservation-app-home-page.png}" class="rounded mx-auto d-block" style="width:800px" alt="Reservation Application" title="Reservation Application"/>
+        <img th:src="@{Images/reservation-app-home-page.jpg}" class="rounded mx-auto d-block" style="width:800px" alt="Reservation Application" title="Reservation Application"/>
     </div>
 
 </body>

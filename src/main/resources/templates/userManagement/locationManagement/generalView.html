@@ -18,20 +18,13 @@
 </head>
 <body>
 
-<div class="pos-f-t">
-    <div class="bg-dark p-2">
-        <div class="bg-dark p-2">
-
-            <div class="topnav">
-                <a th:href="@{/}">Home</a>
-                <a th:href="@{/myAccount}" sec:authorize="isAuthenticated()">My Account</a>
-                <a th:href="@{/reservations}">Locations</a>
-                <a th:href="@{/logoutConfirm}" sec:authorize="isAuthenticated()">Logout</a>
-                <a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a>
-                <a th:href="@{/register}" sec:authorize="!isAuthenticated()">Register</a>
-            </div>
-
-        </div>
+<div class="pos-f-t" style="background: #873e23">
+    <div class="topnav">
+        <a th:href="@{/login}"><i class="bi bi-file-person" style="color: white;"></i></a>
+        <a th:href="@{/logoutConfirm}" sec:authorize="isAuthenticated()" style="color: white;"><i class="bi bi-power"> Logout</i></a>
+        <a th:href="@{/}" style="float: left;"><i class="bi bi-house"></i> Home</a>
+        <a th:href="@{/reservations}" style="float: left;"><i class="bi bi-building"></i> Available Locations</a>
+        <a th:href="@{/myAccount}" sec:authorize="isAuthenticated()" style="float: left;"><i class="bi bi-person"></i> My Account</a>
     </div>
 </div>
 

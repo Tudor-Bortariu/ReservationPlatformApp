@@ -1,6 +1,7 @@
 package ro.demo.ReservationPlatformApp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ro.demo.ReservationPlatformApp.model.*;
 import ro.demo.ReservationPlatformApp.repository.JpaReservationRepository;
 
@@ -9,6 +10,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class ReservationServiceImpl implements ReservationServiceApi{
     @Autowired
     JpaReservationRepository reservationRepository;

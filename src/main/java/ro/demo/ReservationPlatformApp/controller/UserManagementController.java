@@ -181,7 +181,7 @@ public class UserManagementController implements UserManagementControllerApi {
 
         serviceRepository.saveAndFlush(service);
 
-        return new RedirectView("/locationManagement");
+        return new RedirectView("/myAccount/locationManagement");
     }
 
     @Override

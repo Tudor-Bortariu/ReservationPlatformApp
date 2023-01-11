@@ -12,15 +12,22 @@
 </head>
     <body>
 
-    <nav>
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/locationManagement}">Locations</a>
-        <a th:href="@{/reservationManagement}">Reservations</a>
-        <a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a>
-        <a th:href="@{/logoutConfirm}" sec:authorize="isAuthenticated()">Logout</a>
-        <a th:href="@{/register}" sec:authorize="!isAuthenticated()">Register</a>
-        <div class="animation"></div>
-    </nav>
+    <div class="pos-f-t">
+        <div class="bg-dark p-2">
+            <div class="bg-dark p-2">
+
+                <div class="topnavDark">
+                    <a th:href="@{/}">Home</a>
+                    <a th:href="@{/myAccount}" sec:authorize="isAuthenticated()">My Account</a>
+                    <a th:href="@{/reservations}">Locations</a>
+                    <a th:href="@{/logoutConfirm}" sec:authorize="isAuthenticated()">Logout</a>
+                    <a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a>
+                    <a th:href="@{/register}" sec:authorize="!isAuthenticated()">Register</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
         <h1 align="center">Registration Form</h1>
 

@@ -91,7 +91,11 @@ public class ReservationController implements ReservationControllerApi {
     @Override
     public String locationView(Model model,
                                @PathVariable UUID locationId){
-        model.addAttribute("location", locationRepository.findLocationById(locationId).get());
+        Location location = locationRepository.findLocationById(locationId).get();
+
+        model.addAttribute("location", location);
+        model.addAttribute("openingDay", location.getWorkingDays().get(0));
+        model.addAttribute("closingDay", location.getWorkingDays().get(location.getWorkingDays().size() - 1));
 
         return "reservationManagement/locationView";
     }
