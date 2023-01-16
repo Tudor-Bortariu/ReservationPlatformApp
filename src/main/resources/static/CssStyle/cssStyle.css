@@ -93,6 +93,17 @@ h1 {
         text-align: center;
     }
 
+    .list-group-item a {
+        color: #873e23;
+        border-color: #873e23;
+    }
+
+    .list-group-item a:hover {
+            background-color: #873e23;
+            border-color: #873e23;
+            color: white;
+    }
+
 
 
 

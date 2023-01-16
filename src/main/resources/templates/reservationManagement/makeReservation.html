@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Add New Location</title>
@@ -56,15 +56,19 @@
                     <input type="date" class="form-control" name="reservationDate" id="reservationDate" required th:min="${minDate}" th:max="${maxDate}">
                 </div>
                 <div class="col">
-                    <label for="reservationTime">Choose Hour: </label>
-                    <input class="form-control" type="time" name="reservationTime" required id="reservationTime"/>
+                    <label for="reservationTime">Choose Hour:</label>
+                    <select name="reservationTime" id="reservationTime" required class="form-control">
+                        <option th:each="hour : ${totalAvailableHours}" th:value="${hour}" th:text="${hour}"></option>
+                    </select>
                 </div>
                 <div class="col">
+                    <label for="service">Service:</label>
                     <select class="form-select" aria-label="Default select example" name="service" id="service" required>
                         <option th:each="service : ${serviceList}" th:value="${service.name} + ' - ' + ${service.price}" th:text="${service.name} + ' - ' + ${service.price}"></option>
                     </select>
                 </div>
                 <div class="col">
+                    <label for="stylist">Stylist</label>
                     <select class="form-select" aria-label="Default select example" name="stylist" id="stylist" required>
                         <option th:each="stylist : ${stylistList}" th:value="${stylist.name}" th:text="${stylist.name}"></option>
                     </select>

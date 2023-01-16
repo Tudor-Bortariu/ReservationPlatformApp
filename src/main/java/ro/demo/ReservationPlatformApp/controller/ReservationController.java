@@ -3,6 +3,7 @@ package ro.demo.ReservationPlatformApp.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Controller
 public class ReservationController implements ReservationControllerApi {
@@ -61,6 +61,7 @@ public class ReservationController implements ReservationControllerApi {
         model.addAttribute("maxDate", LocalDate.now().plusYears(1));
         model.addAttribute("serviceList", location.getServiceList());
         model.addAttribute("stylistList", location.getStylistList());
+        model.addAttribute("totalAvailableHours", reservationService.getTotalAvailableHours(location));
 
         return "reservationManagement/makeReservation";
     }
@@ -72,18 +73,14 @@ public class ReservationController implements ReservationControllerApi {
                                         @RequestParam String lastName,
                                         @RequestParam String phoneNumber,
                                         @RequestParam LocalDate reservationDate,
-                                        @RequestParam LocalTime reservationTime,
+                                        @RequestParam String reservationTime,
                                         @RequestParam String service,
                                         @RequestParam String stylist){
-        User user = securityService.getUser();
 
-        Location location = locationRepository.findLocationById(locationId).get();
-        Stylist chosenStylist = stylistRepository.findStylistByLocationIdAndName(locationId, stylist).get();
-        String reservationDayOfWeek = reservationDate.getDayOfWeek().name();
-        List<Reservation> reservationList = reservationRepository.findAllReservationsByLocationId(locationId, LocalDate.now());
+        LocalTime reservationHour = LocalTime.parse(reservationTime);
 
-        reservationService.makeReservation(location, reservationDayOfWeek, reservationTime, firstName, lastName, phoneNumber,
-                reservationDate, service, chosenStylist, reservationList, user);
+        reservationService.makeReservation(locationId, reservationHour, firstName, lastName, phoneNumber,
+                reservationDate, service, stylist);
 
         return new RedirectView("/reservations");
     }

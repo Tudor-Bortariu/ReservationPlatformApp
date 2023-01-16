@@ -33,9 +33,11 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <a class="btn btn-primary" th:href="@{/myAccount/locationReservations/{locationId}(locationId=${location.id})}" style="background-color: #04AA6D;" role="button">View Reservations for Location</a>
+            <a class="btn btn-primary" th:href="@{/myAccount/locationReservations/{locationId}(locationId=${location.id})}" style="background-color: #e28743; border-color: #e28743;" role="button">View Reservations for Location</a>
         </div>
+
         <div class="col">
+            <a class="btn btn-outline-primary" style="color: white; background-color: #e28743; border-color: #e28743;" th:href="@{/myAccount/locationManagement/edit/{id}(id=${location.id})}">Edit Location</a>
             <a class="btn btn-outline-danger" th:href="@{/myAccount/locationManagement/delete/{id}(id=${location.id})}">Delete Location</a>
         </div>
     </div>
@@ -78,12 +80,8 @@
                                 <ul class="list-group list-group-flush" th:each="stylist : ${location.stylistList}">
                                     <li class="list-group-item" th:text="${stylist.name}"></li>
                                 </ul>
-                                <h5 class="card-header">
-                                    Actions
-                                </h5>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">
-                                        <a class="btn btn-outline-primary" th:href="@{/myAccount/locationManagement/edit/{id}(id=${location.id})}">Edit Location</a>
                                         <a class="btn btn-outline-success" th:href="@{/myAccount/locationManagement/addStylist/{locationId}(locationId=${location.id})}">Add New Stylist</a>
                                     </li>
                                 </ul>
@@ -97,7 +95,11 @@
                             <ul class="list-group list-group-flush" th:each="service : ${location.serviceList}">
                                 <li class="list-group-item" th:text="${service.name} + ' (' + ${service.price} + ' RON)'"></li>
                             </ul>
-                            <a class="btn btn-outline-success" th:href="@{/myAccount/locationManagement/addService/{locationId}(locationId=${location.id})}">Add New Service</a>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a class="btn btn-outline-success" th:href="@{/myAccount/locationManagement/addService/{locationId}(locationId=${location.id})}">Add New Service</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

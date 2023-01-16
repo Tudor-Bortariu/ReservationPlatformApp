@@ -39,7 +39,7 @@ public class SecurityConfig {
                     try {
                         authz
                                 .requestMatchers("/myAccount", "/myAccount/*").hasAuthority("BUSINESS_OWNER")
-                                .requestMatchers("/reservation/*").authenticated()
+                                .requestMatchers("/reservations/makeReservation/*").authenticated()
                                 .anyRequest().permitAll()
                                 .and()
                                 .formLogin()

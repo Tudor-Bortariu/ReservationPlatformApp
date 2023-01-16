@@ -27,7 +27,7 @@ public interface ReservationControllerApi {
                                  @RequestParam String lastName,
                                  @RequestParam String phoneNumber,
                                  @RequestParam LocalDate reservationDate,
-                                 @RequestParam LocalTime reservationTime,
+                                 @RequestParam String reservationTime,
                                  @RequestParam String service,
                                  @RequestParam String stylist);
 

@@ -8,18 +8,18 @@ import ro.demo.ReservationPlatformApp.model.User;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
 public interface ReservationServiceApi {
 
-    void makeReservation(Location location,
-                         String reservationDayOfWeek,
+    void makeReservation(UUID locationId,
                          LocalTime reservationTime,
                          String firstName,
                          String lastName,
                          String phoneNumber,
                          LocalDate reservationDate,
                          String service,
-                         Stylist chosenStylist,
-                         List<Reservation> reservationList,
-                         User user);
+                         String chosenStylist);
+
+    List<LocalTime> getTotalAvailableHours (Location location);
 }
