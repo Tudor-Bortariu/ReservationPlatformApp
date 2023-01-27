@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
@@ -88,4 +89,18 @@ public interface UserManagementControllerApi {
 
     @GetMapping("/myReservations/delete/{id}")
     RedirectView deleteReservation(Model model, @PathVariable UUID id);
+
+    @GetMapping("/myReservations/edit/{id}")
+    String editReservationForm(Model model, @PathVariable UUID id);
+
+    @PostMapping("/myReservations/edit/{id}")
+    RedirectView editReservation(Model model,
+                           @PathVariable UUID id,
+                           @RequestParam String firstName,
+                           @RequestParam String lastName,
+                           @RequestParam String phoneNumber,
+                           @RequestParam LocalDate reservationDate,
+                           @RequestParam String reservationTime,
+                           @RequestParam String service,
+                           @RequestParam String stylist);
 }

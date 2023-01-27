@@ -10,12 +10,16 @@ import ro.demo.ReservationPlatformApp.model.User;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface JpaReservationRepository extends JpaRepository<Reservation, UUID> {
 
     @Query(value = "SELECT r FROM #{#entityName} r WHERE r.user = :user AND r.reservationDate >= :currentDate")
     List<Reservation> findAllReservationsByUser (User user, LocalDate currentDate);
+
+    @Query(value = "SELECT r FROM #{#entityName} r WHERE r.id = :id")
+    Optional<Reservation> findReservationById (UUID id);
 
     @Transactional
     @Modifying

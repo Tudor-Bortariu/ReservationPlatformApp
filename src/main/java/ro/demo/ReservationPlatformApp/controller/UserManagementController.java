@@ -15,6 +15,7 @@ import ro.demo.ReservationPlatformApp.repository.JpaLocationRepository;
 import ro.demo.ReservationPlatformApp.repository.JpaReservationRepository;
 import ro.demo.ReservationPlatformApp.repository.JpaServiceRepository;
 import ro.demo.ReservationPlatformApp.repository.JpaStylistRepository;
+import ro.demo.ReservationPlatformApp.service.ReservationServiceImpl;
 import ro.demo.ReservationPlatformApp.service.SecurityServiceImpl;
 
 import java.io.ByteArrayInputStream;
@@ -43,6 +44,9 @@ public class UserManagementController implements UserManagementControllerApi {
 
     @Autowired
     JpaReservationRepository reservationRepository;
+
+    @Autowired
+    ReservationServiceImpl reservationService;
 
     @Override
     public String accountManagement(Model model) {
@@ -226,6 +230,52 @@ public class UserManagementController implements UserManagementControllerApi {
     @Override
     public RedirectView deleteReservation(Model model, @PathVariable UUID id){
         reservationRepository.deleteReservationByUserAndId(securityService.getUser(), id);
+
+        return new RedirectView("/myAccount/myReservations");
+    }
+
+    @Override
+    public String editReservationForm(Model model, @PathVariable UUID id){
+        Reservation reservation = reservationRepository.findReservationById(id).get();
+
+        model.addAttribute("reservation", reservation);
+        model.addAttribute("totalAvailableHours", reservationService.getTotalAvailableHours(reservation.getLocation()));
+        model.addAttribute("minDate", LocalDate.now());
+        model.addAttribute("maxDate", LocalDate.now().plusYears(1));
+        model.addAttribute("serviceList", reservation.getLocation().getServiceList());
+        model.addAttribute("stylistList", reservation.getLocation().getStylistList());
+
+        return "userManagement/reservationManagement/editReservation";
+    }
+
+    @Override
+    public RedirectView editReservation(Model model,
+                                  @PathVariable UUID id,
+                                  @RequestParam String firstName,
+                                  @RequestParam String lastName,
+                                  @RequestParam String phoneNumber,
+                                  @RequestParam LocalDate reservationDate,
+                                  @RequestParam String reservationTime,
+                                  @RequestParam String service,
+                                  @RequestParam String stylist){
+
+        Reservation reservation = reservationRepository.findReservationById(id).get();
+
+        model.addAttribute("reservation", reservation);
+
+        LocalTime reservationHour = LocalTime.parse(reservationTime);
+        Stylist chosenStylist = stylistRepository.findStylistByLocationIdAndName(reservation.getLocation().getId(), stylist).get();
+
+        reservation.setFirstName(firstName);
+        reservation.setLastName(lastName);
+        reservation.setPhoneNumber(phoneNumber);
+        reservation.setReservationDate(reservationDate);
+        reservation.setDayOfWeek(reservationDate.getDayOfWeek().name());
+        reservation.setReservationTime(reservationHour);
+        reservation.setService(service);
+        reservation.setStylist(chosenStylist);
+
+        reservationRepository.saveAndFlush(reservation);
 
         return new RedirectView("/myAccount/myReservations");
     }
